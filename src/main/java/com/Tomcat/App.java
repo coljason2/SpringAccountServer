@@ -15,12 +15,12 @@ public class App implements Runnable {
 	private final static Logger LOGGER = Logger.getLogger(App.class.getName());
 	private final static String mWorkingDir = System.getProperty("java.io.tmpdir");
 	private Context appContext;
-	private File f;
+	private static File warfile;
 	private static Tomcat tomcat = new Tomcat();
 
 	public static void initializeserver(int port, File f) {
 		tomcat.setPort(port);
-		f = f;
+		warfile = f;
 	}
 
 	public void run() {
@@ -36,10 +36,10 @@ public class App implements Runnable {
 			e.printStackTrace();
 		}
 		LOGGER.info("Tomcat started on " + tomcat.getHost());
-	
+
 		// Alternatively, you can specify a WAR file as last parameter in the
 		// following call e.g. "C:\\Users\\admin\\Desktop\\app.war"
-		appContext = App.getTomcat().addWebapp(App.getTomcat().getHost(), "/SpringAccount", f.getAbsolutePath());
+		appContext = App.getTomcat().addWebapp(App.getTomcat().getHost(), "/SpringAccount", warfile.getAbsolutePath());
 		LOGGER.info("Deployed " + appContext.getBaseName() + " as " + appContext.getBaseName());
 		LOGGER.info("mWorkingDir " + mWorkingDir);
 		tomcat.getServer().await();

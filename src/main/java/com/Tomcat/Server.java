@@ -5,23 +5,21 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JTextField;
-
 import org.apache.catalina.LifecycleException;
-
 import javax.swing.JLabel;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.awt.event.ActionEvent;
 
 public class Server {
-	
+
 	private JFrame frame;
 	private JTextField PortText;
 	private JButton button;
 	private App App = new App();
 	private Thread serverThread;
-	private String path = Server.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-	File f = new File(path);
+	private File f = new File("SpringAccount.war");
+
 	/**
 	 * Launch the application.
 	 */
@@ -60,12 +58,13 @@ public class Server {
 		btnStart.addActionListener(new ActionListener() {
 			@SuppressWarnings("static-access")
 			public void actionPerformed(ActionEvent e) {
-				
+
 				System.out.println(f.getAbsolutePath());
 				int port = Integer.parseInt(PortText.getText());
-				App.initializeserver(port,f);
+				App.initializeserver(port, f);
 				serverThread = new Thread(App);
 				serverThread.start();
+
 			}
 		});
 		btnStart.setBounds(23, 52, 87, 23);
