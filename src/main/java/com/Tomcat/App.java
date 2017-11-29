@@ -14,7 +14,6 @@ import org.apache.catalina.startup.Tomcat;
 public class App implements Runnable {
 	private final static Logger LOGGER = Logger.getLogger(App.class.getName());
 	private final static String mWorkingDir = System.getProperty("java.io.tmpdir");
-	private Context appContext;
 	private static File warfile;
 	private static Tomcat tomcat = new Tomcat();
 
@@ -39,18 +38,11 @@ public class App implements Runnable {
 
 		// Alternatively, you can specify a WAR file as last parameter in the
 		// following call e.g. "C:\\Users\\admin\\Desktop\\app.war"
-		appContext = App.getTomcat().addWebapp(App.getTomcat().getHost(), "/SpringAccount", warfile.getAbsolutePath());
+		Context appContext = App.getTomcat().addWebapp(App.getTomcat().getHost(), "/SpringAccount",
+				warfile.getAbsolutePath());
 		LOGGER.info("Deployed " + appContext.getBaseName() + " as " + appContext.getBaseName());
 		LOGGER.info("mWorkingDir " + mWorkingDir);
 		tomcat.getServer().await();
-	}
-
-	public Context getAppContext() {
-		return appContext;
-	}
-
-	public void setAppContext(Context appContext) {
-		this.appContext = appContext;
 	}
 
 	public static Tomcat getTomcat() {

@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JTextField;
 import org.apache.catalina.LifecycleException;
 import javax.swing.JLabel;
@@ -18,7 +19,8 @@ public class Server {
 	private JButton button;
 	private App App = new App();
 	private Thread serverThread;
-	private File f = new File("SpringAccount.war");
+	private JFileChooser fc = new JFileChooser();
+	private File f;
 
 	/**
 	 * Launch the application.
@@ -92,6 +94,16 @@ public class Server {
 		});
 		button.setBounds(129, 52, 87, 23);
 		frame.getContentPane().add(button);
+
+		JButton btnNewButton = new JButton("file");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				fc.showOpenDialog(null);
+				f = fc.getSelectedFile();
+			}
+		});
+		btnNewButton.setBounds(175, 10, 64, 23);
+		frame.getContentPane().add(btnNewButton);
 
 	}
 }
