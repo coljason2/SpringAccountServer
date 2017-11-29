@@ -14,6 +14,7 @@ import org.apache.catalina.startup.Tomcat;
 public class App implements Runnable {
 	private final static Logger LOGGER = Logger.getLogger(App.class.getName());
 	private final static String mWorkingDir = System.getProperty("java.io.tmpdir");
+	private static String ENCODING = "UTF-8";
 	private static File warfile;
 	private static Tomcat tomcat = new Tomcat();
 
@@ -23,18 +24,19 @@ public class App implements Runnable {
 	}
 
 	public void run() {
+		long startTime = System.currentTimeMillis();
 		tomcat.setBaseDir(mWorkingDir);
 		tomcat.getHost().setAppBase(mWorkingDir);
 		tomcat.getHost().setAutoDeploy(true);
 		tomcat.getHost().setDeployOnStartup(true);
-
+		tomcat.getConnector().setURIEncoding(ENCODING);
 		try {
 			tomcat.start();
 		} catch (LifecycleException e) {
 			LOGGER.severe("Tomcat could not be started.");
 			e.printStackTrace();
 		}
-		LOGGER.info("Tomcat started on " + tomcat.getHost());
+		LOGGER.info("Tomcat started on ");
 
 		// Alternatively, you can specify a WAR file as last parameter in the
 		// following call e.g. "C:\\Users\\admin\\Desktop\\app.war"

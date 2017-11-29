@@ -12,8 +12,13 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.awt.event.ActionEvent;
 
-public class Server {
 
+/*
+ * Export jar file must choose Extract require lib to jar
+ * 
+ * */
+public class Server {
+	
 	private JFrame frame;
 	private JTextField PortText;
 	private JButton button;
@@ -61,12 +66,11 @@ public class Server {
 			@SuppressWarnings("static-access")
 			public void actionPerformed(ActionEvent e) {
 
-				System.out.println(f.getAbsolutePath());
+				//System.out.println(f.getAbsolutePath());
 				int port = Integer.parseInt(PortText.getText());
 				App.initializeserver(port, f);
 				serverThread = new Thread(App);
 				serverThread.start();
-
 			}
 		});
 		btnStart.setBounds(23, 52, 87, 23);
