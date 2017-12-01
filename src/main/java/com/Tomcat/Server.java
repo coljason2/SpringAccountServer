@@ -10,15 +10,16 @@ import org.apache.catalina.LifecycleException;
 import javax.swing.JLabel;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.lang.reflect.Field;
+import java.nio.charset.Charset;
 import java.awt.event.ActionEvent;
-
 
 /*
  * Export jar file must choose Extract require lib to jar
  * 
  * */
 public class Server {
-	
+
 	private JFrame frame;
 	private JTextField PortText;
 	private JButton button;
@@ -29,11 +30,26 @@ public class Server {
 
 	/**
 	 * Launch the application.
+	 * 
+	 * @throws SecurityException
+	 * @throws NoSuchFieldException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args)
+			throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		System.setProperty("file.encoding", "UTF-8");
+		Field charset = Charset.class.getDeclaredField("defaultCharset");
+		charset.setAccessible(true);
+		charset.set(null, null);
+		// System.out.println(String.format("file.encoding: %s",
+		// System.getProperty("file.encoding")));
+		// System.out.println(String.format("defaultCharset: %s",
+		// Charset.defaultCharset().name()));
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+
 					Server window = new Server();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
@@ -66,7 +82,7 @@ public class Server {
 			@SuppressWarnings("static-access")
 			public void actionPerformed(ActionEvent e) {
 
-				//System.out.println(f.getAbsolutePath());
+				// System.out.println(f.getAbsolutePath());
 				int port = Integer.parseInt(PortText.getText());
 				App.initializeserver(port, f);
 				serverThread = new Thread(App);
