@@ -42,10 +42,8 @@ public class Server {
 		Field charset = Charset.class.getDeclaredField("defaultCharset");
 		charset.setAccessible(true);
 		charset.set(null, null);
-		// System.out.println(String.format("file.encoding: %s",
-		// System.getProperty("file.encoding")));
-		// System.out.println(String.format("defaultCharset: %s",
-		// Charset.defaultCharset().name()));
+		System.out.println(String.format("file.encoding: %s", System.getProperty("file.encoding")));
+		System.out.println(String.format("defaultCharset: %s", Charset.defaultCharset().name()));
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
