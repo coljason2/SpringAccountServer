@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JTextField;
+import javax.swing.plaf.basic.BasicOptionPaneUI.ButtonActionListener;
+
 import org.apache.catalina.LifecycleException;
 import javax.swing.JLabel;
 import java.awt.event.ActionListener;
@@ -22,11 +24,13 @@ public class Server {
 
 	private JFrame frame;
 	private JTextField PortText;
-	private JButton button;
 	private App App = new App();
 	private Thread serverThread;
 	private JFileChooser fc = new JFileChooser();
 	private File f;
+	private JButton btnStart = new JButton("Start");
+	private JButton btnNewButton = new JButton("file");
+	private JButton button = new JButton("Stop");
 
 	/**
 	 * Launch the application.
@@ -42,8 +46,6 @@ public class Server {
 		Field charset = Charset.class.getDeclaredField("defaultCharset");
 		charset.setAccessible(true);
 		charset.set(null, null);
-		System.out.println(String.format("file.encoding: %s", System.getProperty("file.encoding")));
-		System.out.println(String.format("defaultCharset: %s", Charset.defaultCharset().name()));
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -74,8 +76,25 @@ public class Server {
 		frame.setBounds(100, 100, 255, 129);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
+		btnStart.setBounds(23, 52, 87, 23);
+		frame.getContentPane().add(btnStart);
+		PortText = new JTextField();
+		PortText.setText("7001");
+		PortText.setBounds(66, 11, 96, 21);
+		frame.getContentPane().add(PortText);
+		PortText.setColumns(10);
+		JLabel labelport = new JLabel("PORT：");
+		labelport.setBounds(10, 14, 46, 15);
+		frame.getContentPane().add(labelport);
+		button.setBounds(129, 52, 87, 23);
+		frame.getContentPane().add(button);
+		btnNewButton.setBounds(175, 10, 64, 23);
+		frame.getContentPane().add(btnNewButton);
+		ButtonActionListener();
 
-		JButton btnStart = new JButton("Start");
+	}
+
+	public void ButtonActionListener() {
 		btnStart.addActionListener(new ActionListener() {
 			@SuppressWarnings("static-access")
 			public void actionPerformed(ActionEvent e) {
@@ -87,20 +106,12 @@ public class Server {
 				serverThread.start();
 			}
 		});
-		btnStart.setBounds(23, 52, 87, 23);
-		frame.getContentPane().add(btnStart);
-
-		PortText = new JTextField();
-		PortText.setText("7001");
-		PortText.setBounds(66, 11, 96, 21);
-		frame.getContentPane().add(PortText);
-		PortText.setColumns(10);
-
-		JLabel labelport = new JLabel("PORT：");
-		labelport.setBounds(10, 14, 46, 15);
-		frame.getContentPane().add(labelport);
-
-		button = new JButton("Stop");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				fc.showOpenDialog(null);
+				f = fc.getSelectedFile();
+			}
+		});
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -110,18 +121,5 @@ public class Server {
 				}
 			}
 		});
-		button.setBounds(129, 52, 87, 23);
-		frame.getContentPane().add(button);
-
-		JButton btnNewButton = new JButton("file");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				fc.showOpenDialog(null);
-				f = fc.getSelectedFile();
-			}
-		});
-		btnNewButton.setBounds(175, 10, 64, 23);
-		frame.getContentPane().add(btnNewButton);
-
 	}
 }

@@ -7,20 +7,28 @@ import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
 
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Hello world!
  *
  */
+@Log
 public class App implements Runnable {
-	private final static Logger LOGGER = Logger.getLogger(App.class.getName());
+	// private final static Logger LOGGER =
+	// Logger.getLogger(App.class.getName());
 	private final static String mWorkingDir = System.getProperty("java.io.tmpdir");
 	private static String ENCODING = "UTF-8";
 	private static File warfile;
 	private static Tomcat tomcat = new Tomcat();
+	private static File war = new File("SpringAccount.war");
 
 	public static void initializeserver(int port, File f) {
 		tomcat.setPort(port);
+		log.info(f.getAbsolutePath() + " " + f.getName().replaceAll(".war", ""));
 		warfile = f;
+
 	}
 
 	public void run() {
@@ -33,17 +41,17 @@ public class App implements Runnable {
 		try {
 			tomcat.start();
 		} catch (LifecycleException e) {
-			LOGGER.severe("Tomcat could not be started.");
+			log.info("Tomcat could not be started.");
 			e.printStackTrace();
 		}
-		LOGGER.info("Tomcat started on ");
+		log.info("Tomcat started on ");
 
 		// Alternatively, you can specify a WAR file as last parameter in the
 		// following call e.g. "C:\\Users\\admin\\Desktop\\app.war"
-		Context appContext = App.getTomcat().addWebapp(App.getTomcat().getHost(), "/SpringAccount",
-				warfile.getAbsolutePath());
-		LOGGER.info("Deployed " + appContext.getBaseName() + " as " + appContext.getBaseName());
-		LOGGER.info("mWorkingDir " + mWorkingDir);
+		Context appContext = App.getTomcat().addWebapp(App.getTomcat().getHost(),
+				"/" + warfile.getName().replaceAll(".war", ""), warfile.getAbsolutePath());
+		log.info("Deployed " + appContext.getBaseName() + " as " + appContext.getBaseName());
+		log.info("mWorkingDir " + mWorkingDir);
 		tomcat.getServer().await();
 	}
 
