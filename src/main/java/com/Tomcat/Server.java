@@ -6,7 +6,6 @@ import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JTextField;
-import javax.swing.plaf.basic.BasicOptionPaneUI.ButtonActionListener;
 
 import org.apache.catalina.LifecycleException;
 import javax.swing.JLabel;
@@ -24,22 +23,14 @@ public class Server {
 
 	private JFrame frame;
 	private JTextField PortText;
-	private App App = new App();
+	private App App;
 	private Thread serverThread;
 	private JFileChooser fc = new JFileChooser();
 	private File f;
-	private JButton btnStart = new JButton("Start");
-	private JButton btnNewButton = new JButton("file");
-	private JButton button = new JButton("Stop");
+	private JButton buttonStart = new JButton("Start");
+	private JButton buttonOpenFile = new JButton("file");
+	private JButton buttonStop = new JButton("Stop");
 
-	/**
-	 * Launch the application.
-	 * 
-	 * @throws SecurityException
-	 * @throws NoSuchFieldException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 */
 	public static void main(String[] args)
 			throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		System.setProperty("file.encoding", "UTF-8");
@@ -76,8 +67,8 @@ public class Server {
 		frame.setBounds(100, 100, 255, 129);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		btnStart.setBounds(23, 52, 87, 23);
-		frame.getContentPane().add(btnStart);
+		buttonStart.setBounds(23, 52, 87, 23);
+		frame.getContentPane().add(buttonStart);
 		PortText = new JTextField();
 		PortText.setText("7001");
 		PortText.setBounds(66, 11, 96, 21);
@@ -86,36 +77,46 @@ public class Server {
 		JLabel labelport = new JLabel("PORT：");
 		labelport.setBounds(10, 14, 46, 15);
 		frame.getContentPane().add(labelport);
-		button.setBounds(129, 52, 87, 23);
-		frame.getContentPane().add(button);
-		btnNewButton.setBounds(175, 10, 64, 23);
-		frame.getContentPane().add(btnNewButton);
+		buttonStop.setBounds(129, 52, 87, 23);
+		frame.getContentPane().add(buttonStop);
+		buttonOpenFile.setBounds(175, 10, 64, 23);
+		frame.getContentPane().add(buttonOpenFile);
 		ButtonActionListener();
 
 	}
 
 	public void ButtonActionListener() {
-		btnStart.addActionListener(new ActionListener() {
+		buttonStart.addActionListener(new ActionListener() {
 			@SuppressWarnings("static-access")
 			public void actionPerformed(ActionEvent e) {
+				App = new App();
 
 				// System.out.println(f.getAbsolutePath());
 				int port = Integer.parseInt(PortText.getText());
 				App.initializeserver(port, f);
 				serverThread = new Thread(App);
 				serverThread.start();
+				buttonStart.setEnabled(false);
 			}
 		});
-		btnNewButton.addActionListener(new ActionListener() {
+		buttonOpenFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				fc.showOpenDialog(null);
 				f = fc.getSelectedFile();
 			}
 		});
-		button.addActionListener(new ActionListener() {
+		buttonStop.addActionListener(new ActionListener() {
+			@SuppressWarnings("static-access")
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// System.out.println(App.getTomcat().getService().getDomain());
 					App.getTomcat().stop();
+					// App.getTomcat().destroy();
+					App = null;
+					serverThread.interrupt();
+					serverThread = null;
+					buttonStart.setEnabled(true);
+					System.gc();
 				} catch (LifecycleException e1) {
 					e1.printStackTrace();
 				}

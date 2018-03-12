@@ -1,14 +1,10 @@
 package com.Tomcat;
 
 import java.io.File;
-import java.util.logging.Logger;
-
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
-
 import lombok.extern.java.Log;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Hello world!
@@ -23,6 +19,7 @@ public class App implements Runnable {
 	private static File warfile;
 	private static Tomcat tomcat = new Tomcat();
 	private static File war = new File("SpringAccount.war");
+	private Context appContext;
 
 	public static void initializeserver(int port, File f) {
 		tomcat.setPort(port);
@@ -42,13 +39,12 @@ public class App implements Runnable {
 			tomcat.start();
 		} catch (LifecycleException e) {
 			log.info("Tomcat could not be started.");
-			e.printStackTrace();
 		}
 		log.info("Tomcat started on ");
 
 		// Alternatively, you can specify a WAR file as last parameter in the
 		// following call e.g. "C:\\Users\\admin\\Desktop\\app.war"
-		Context appContext = App.getTomcat().addWebapp(App.getTomcat().getHost(),
+		appContext = App.getTomcat().addWebapp(App.getTomcat().getHost(),
 				"/" + warfile.getName().replaceAll(".war", ""), warfile.getAbsolutePath());
 		log.info("Deployed " + appContext.getBaseName() + " as " + appContext.getBaseName());
 		log.info("mWorkingDir " + mWorkingDir);
